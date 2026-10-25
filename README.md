@@ -26,14 +26,14 @@ Updates are picked up automatically: the next time the game opens with an intern
 |---|---|
 | `index.html`, `style.css`, `app.js` | The page, its look, and the game screen (tapping, dragging, turns, saving) |
 | `engine.js` | Rules, scoring, word checking and the computer's move finder. No DOM, so it can be tested in Node |
-| `words.txt` | The ENABLE word list (public domain, 172,823 words) |
+| `words.txt` | Collins Scrabble Words 2021 (279,077 words), the list used by UK clubs. © HarperCollins Publishers; included here for personal, non-commercial use |
 | `words.js` | `words.txt` wrapped in a script so it also loads when `index.html` is opened from disk. Rebuild with `node tools/build-words.js` |
 | `manifest.webmanifest`, `sw.js`, `icons/` | What makes it installable and work offline. Icons are drawn by `tools/make-icons.py` |
 | `tests/engine.test.js` | Tests for validation, scoring and move generation. Run with `node tests/engine.test.js` |
 
 ## How the computer plays
 
-The word list is loaded into a compact trie (typed arrays, about 390k nodes). Moves are found with the Appel & Jacobson anchor-square algorithm: cross-checks limit which letters can go in each square, and words are extended left and right from each anchor, in both directions. A rack with two blanks takes well under a second.
+The word list is loaded into a compact trie built from typed arrays. Moves are found with the Appel & Jacobson anchor-square algorithm: cross-checks limit which letters can go in each square, and words are extended left and right from each anchor, in both directions. A rack with two blanks takes about a third of a second.
 
 - **Easy** picks at random from short, low-scoring words.
 - **Medium** picks at random from words scoring 55–85% of the best available.

@@ -52,6 +52,8 @@ test('premium squares are laid out symmetrically', () => {
 test('dictionary lookups', () => {
   assert.ok(dict.has('QUIZ'));
   assert.ok(dict.has('cat'));
+  assert.ok(dict.has('FOLEYS'));
+  assert.ok(dict.has('QI'));
   assert.ok(!dict.has('QUIZE'));
   assert.ok(!dict.has('XQZ'));
 });
