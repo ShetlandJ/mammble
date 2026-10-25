@@ -5,7 +5,11 @@
 const fs = require('node:fs');
 const path = require('node:path');
 
+// Shown in the footer, so you can tell which list a device has loaded.
+const NAME = 'Collins Scrabble Words 2021';
+
 const root = path.join(__dirname, '..');
 const words = fs.readFileSync(path.join(root, 'words.txt'), 'utf8').trim().split(/\r?\n/).join('\n');
-fs.writeFileSync(path.join(root, 'words.js'), `self.MAMMBLE_WORDS = ${JSON.stringify(words)};\n`);
-console.log(`words.js written (${words.split('\n').length} words)`);
+fs.writeFileSync(path.join(root, 'words.js'),
+  `self.MAMMBLE_DICT_NAME = ${JSON.stringify(NAME)};\nself.MAMMBLE_WORDS = ${JSON.stringify(words)};\n`);
+console.log(`words.js written (${NAME}, ${words.split('\n').length} words)`);

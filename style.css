@@ -393,6 +393,14 @@ body.landscape .history ol { max-height: none; }
 .history .h-pts { font-weight: 700; }
 .history .empty { color: var(--muted); }
 
+.debug {
+  padding: 4px 16px 12px;
+  text-align: center;
+  font-size: 0.75rem;
+  color: var(--muted);
+  opacity: 0.6;
+}
+
 /* ---------- Dialogs ---------- */
 
 .overlay {

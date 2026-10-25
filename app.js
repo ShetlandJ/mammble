@@ -707,7 +707,7 @@
     root.setProperty('--rack-max', `${rackTile}px`);
 
     const header = document.querySelector('.topbar').offsetHeight;
-    const legend = document.querySelector('.legend').offsetHeight + 8;
+    const legend = document.querySelector('.legend').offsetHeight + 8 + $('#debug').offsetHeight;
     let size;
     if (landscape) {
       size = Math.min(h - header - legend - 36, w - 380 - 52);
@@ -739,6 +739,7 @@
     setTimeout(() => {
       dict = new E.Dictionary(self.MAMMBLE_WORDS);
       self.MAMMBLE_WORDS = null;
+      $('#debug').textContent = `Dictionary: ${self.MAMMBLE_DICT_NAME || 'unknown'} (${dict.size.toLocaleString('en-GB')} words)`;
       state = load();
       if (!state) {
         startGame(localStorage.getItem(LEVEL_KEY) || 'medium');
