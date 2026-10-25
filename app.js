@@ -695,14 +695,16 @@
   // ---------- Sizing ----------
 
   function fit() {
-    const w = window.innerWidth;
-    const h = window.innerHeight;
+    // clientWidth is the layout viewport. innerWidth can report a zoomed-out
+    // width on Android, which made the board wider than the screen.
+    const w = document.documentElement.clientWidth;
+    const h = document.documentElement.clientHeight;
     const landscape = w > h && w >= 700;
     document.body.classList.toggle('landscape', landscape);
     const root = document.documentElement.style;
     const rackWidth = landscape ? 380 - 20 : Math.min(w - 16, 640) - 20;
     const rackTile = Math.floor(Math.min(76, (rackWidth - 6 * 6) / 7));
-    root.setProperty('--rack-tile', `${rackTile}px`);
+    root.setProperty('--rack-max', `${rackTile}px`);
 
     const header = document.querySelector('.topbar').offsetHeight;
     const legend = document.querySelector('.legend').offsetHeight + 8;
@@ -721,7 +723,7 @@
     size = Math.max(size, Math.min(w - 16, 300));
     const gap = size > 500 ? 3 : 2;
     root.setProperty('--gap', `${gap}px`);
-    root.setProperty('--sq', `${Math.floor((size - gap * 16) / 15)}px`);
+    root.setProperty('--board-sq', `${Math.floor((size - gap * 16) / 15)}px`);
   }
 
   // ---------- Start ----------
