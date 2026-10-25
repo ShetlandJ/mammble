@@ -1,7 +1,11 @@
 // Offline support: cache the whole game on first visit. Each request is answered
 // from the cache straight away (so it works offline) and refreshed from the
-// network in the background, so updates arrive the next time the game opens.
-const VERSION = 'mammble-v2';
+// network in the background.
+//
+// To push an update to every device: change VERSION. The browser notices the
+// new sw.js on the next launch, downloads every file fresh, then reloads any
+// open game window so it switches to the new version straight away.
+const VERSION = 'mammble-v3';
 const FILES = [
   './',
   'index.html',
@@ -17,15 +21,25 @@ const FILES = [
 ];
 
 self.addEventListener('install', (event) => {
-  event.waitUntil(caches.open(VERSION).then((cache) => cache.addAll(FILES)).then(() => self.skipWaiting()));
+  event.waitUntil(
+    caches.open(VERSION)
+      .then((cache) => cache.addAll(FILES.map((f) => new Request(f, { cache: 'reload' }))))
+      .then(() => self.skipWaiting()),
+  );
 });
 
 self.addEventListener('activate', (event) => {
-  event.waitUntil(
-    caches.keys()
-      .then((keys) => Promise.all(keys.filter((k) => k !== VERSION).map((k) => caches.delete(k))))
-      .then(() => self.clients.claim()),
-  );
+  event.waitUntil((async () => {
+    const keys = await caches.keys();
+    const isUpdate = keys.some((k) => k !== VERSION);
+    await Promise.all(keys.filter((k) => k !== VERSION).map((k) => caches.delete(k)));
+    await self.clients.claim();
+    // Replacing an older version: reload open windows so they pick up the new files.
+    if (isUpdate) {
+      const windows = await self.clients.matchAll({ type: 'window' });
+      await Promise.all(windows.map((w) => w.navigate(w.url).catch(() => {})));
+    }
+  })());
 });
 
 self.addEventListener('fetch', (event) => {
